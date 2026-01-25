@@ -97,12 +97,6 @@ php bin/olyxis serve localhost 5000
 
 ---
 
-## 👨‍💻 Desarrollador
-
-Desarrollado con pasión por **PushOFDev**.
-
----
-
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia especificada en el repositorio.
@@ -115,6 +109,12 @@ Las contribuciones son bienvenidas. Por favor, abre un issue o pull request para
 
 ---
 
-## 📞 Contacto
+## 👨‍💻 Autor
 
-Para más información, visita el [repositorio oficial](https://github.com/Javierborja09/Gestion-Inventario-powered-Olyxis).
+**Javier Jeanpool Borja Samaniego**
+
+- GitHub: [@JavierBorja09](https://github.com/JavierBorja09)
+- Email: javierborjasamaniego@gmail.com
+- LinkedIn: [Mi Perfil](https://www.linkedin.com/in/javier-jeanpool-borja-samaniego-a6b8b7300/)
+
+---
