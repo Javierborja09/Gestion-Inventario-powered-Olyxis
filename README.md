@@ -1,5 +1,5 @@
 # 📦 Gestión de Inventario - Powered by Olyxis
-
+**Este proyecto está construido sobre Olyxis Framework, un motor de desarrollo personalizado diseñado para ofrecer alto rendimiento y seguridad en aplicaciones web profesionales.
 **Gestión de Inventario powered by Olyxis** es una solución integral de nivel empresarial diseñada para el control preciso de existencias y la administración eficiente de ventas. Este sistema destaca por su robustez técnica y una interfaz moderna pensada en la productividad.
 
 ---
