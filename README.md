@@ -92,7 +92,7 @@ php bin/olyxis serve
 
 **Puerto personalizado:**
 ```bash
-php bin/olyxis localhost 5000
+php bin/olyxis serve localhost 5000
 ```
 
 ---
