@@ -34,6 +34,23 @@ El proyecto está construido sobre el **[Framework Olyxis](https://github.com/Ja
 
 ---
 
+🛡️ Seguridad Probada y Certificada
+Para garantizar la integridad de los datos, este sistema ha sido sometido a rigurosas pruebas de penetración (Pentesting) mediante scripts avanzados de Python, superando con éxito cada intento de vulneración:
+
+SQL Injection (SQLi): ❌ Fallido. Bloqueado gracias al uso de Procedimientos Almacenados y consultas parametrizadas.
+
+Cross-Site Scripting (XSS): ❌ Fallido. Los ataques fueron interceptados por el sistema de sanitización y el manejo seguro de sesiones.
+
+Path Traversal: ❌ Fallido. La arquitectura de directorios del framework impide el acceso a archivos sensibles como el .env.
+
+Command Injection: ❌ Fallido. El aislamiento de la lógica de negocio mediante el patrón MVC evita la ejecución de comandos en el sistema operativo.
+
+Fuerza Bruta: ❌ Fallido. El sistema de autenticación resistió intentos automatizados de acceso.
+
+Conclusión: Estas pruebas demuestran que es posible construir aplicaciones web altamente seguras y robustas utilizando el Framework Olyxis, superando los estándares comunes de protección.
+
+---
+
 ## 📸 Vista Previa (Screenshots)
 
 ### Gestión de Categorías
