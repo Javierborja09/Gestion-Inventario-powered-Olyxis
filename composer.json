@@ -1,15 +1,8 @@
 {
+    "name": "javierborja09/gestion-inventario",
+    "description": "Sistema de Inventario powered by Olyxis",
     "require": {
         "php": ">=8.0"
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "olyxis"
-        }
-    ],
-    "require-dev": {
-        "javierborja09/olyxis": "@dev"
     },
     "autoload": {
         "psr-4": {
