@@ -34,7 +34,7 @@ El proyecto está construido sobre el **[Framework Olyxis](https://github.com/Ja
 
 ---
 
-🛡️ Seguridad Probada y Certificada
+## 🛡️ Seguridad Probada y Certificada
 Para garantizar la integridad de los datos, este sistema ha sido sometido a rigurosas pruebas de penetración (Pentesting) mediante scripts avanzados de Python, superando con éxito cada intento de vulneración:
 
 SQL Injection (SQLi): ❌ Fallido. Bloqueado gracias al uso de Procedimientos Almacenados y consultas parametrizadas.
