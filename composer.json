@@ -1,0 +1,20 @@
+{
+    "require": {
+        "php": ">=8.0"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "olyxis"
+        }
+    ],
+    "require-dev": {
+        "javierborja09/olyxis": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "app/"
+        }
+    }
+}

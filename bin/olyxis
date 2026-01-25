@@ -1,0 +1,64 @@
+#!/usr/bin/env php
+<?php
+
+// ============================================
+// Olyxis CLI
+// ============================================
+
+$internalAutoloader = __DIR__ . '/../vendor/autoload.php';
+$currentAutoloader = getcwd() . '/vendor/autoload.php';
+
+if (file_exists($internalAutoloader)) {
+    require $internalAutoloader;
+} elseif (file_exists($currentAutoloader)) {
+    require $currentAutoloader;
+} else {
+    die("❌ Error: No se encontró 'vendor/autoload.php'. Ejecuta 'composer dump-autoload' o 'composer install'.\n");
+}
+
+use Framework\Console\Commands\InitCommand;
+use Framework\Console\Commands\ServeCommand;
+use Framework\Console\Commands\MakeControllerCommand;
+
+$command = $argv[1] ?? 'help';
+$args = array_slice($argv, 2);
+
+switch ($command) {
+    case 'init':
+        $cmd = new InitCommand();
+        $cmd->execute($args);
+        break;
+
+    case 'serve':
+        $cmd = new ServeCommand();
+        $cmd->execute($args);
+        break;
+
+    case 'make:controller':
+        $cmd = new MakeControllerCommand();
+        $cmd->execute($args);
+        break;
+
+    case 'help':
+    default:
+        displayHelp();
+        break;
+}
+
+function displayHelp() {
+    echo "\n";
+    echo "╔════════════════════════════════════════╗\n";
+    echo "║   🚀 Olyxis CLI v1.0             ║\n";
+    echo "╚════════════════════════════════════════╝\n\n";
+    
+    echo "Comandos disponibles:\n";
+    echo "  ├─ init              Inicializa un nuevo proyecto\n";
+    echo "  ├─ serve             Inicia el servidor de desarrollo\n";
+    echo "  └─ make:controller   Crea un nuevo controlador\n";
+    echo "\n";
+    echo "Ejemplos:\n";
+    echo "  php bin/olyxis init\n";
+    echo "  php bin/olyxis serve\n";
+    echo "  php bin/olyxis make:controller User\n";
+    echo "\n";
+}

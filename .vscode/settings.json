@@ -1,0 +1,8 @@
+{
+    "intelephense.diagnostics.undefinedTypes": false,
+    "intelephense.diagnostics.undefinedMethods": false,
+    "intelephense.environment.includePaths": [
+        "app",
+        "Framework"
+    ]
+}
