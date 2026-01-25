@@ -112,6 +112,10 @@ php bin/olyxis serve
 php bin/olyxis serve localhost 5000
 ```
 
+**Usuario Predefinido:**
+```bash
+User: admin - Password: admin123
+```
 ---
 
 ## 📄 Licencia
