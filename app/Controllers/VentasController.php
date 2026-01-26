@@ -5,6 +5,8 @@ use Framework\Core\Controller;
 use Framework\Core\Request;
 use App\Models\ProductoDAO;
 use App\Models\VentaDAO;
+
+use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;
 
 class VentasController extends Controller
@@ -15,7 +17,7 @@ class VentasController extends Controller
     public function __construct()
     {
         $this->middleware(AuthMiddleware::class);
-        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
+        $this->middleware(SessionTimeoutMiddleware::class);
         $this->productoDao = new ProductoDAO();
         $this->ventaDao = new VentaDAO();
     }

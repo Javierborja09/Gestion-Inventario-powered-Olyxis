@@ -6,6 +6,7 @@ use Framework\Core\Controller;
 use Framework\Core\Request;
 use App\Models\CategoriaDAO;
 use App\Models\Entity\Categoria;
+use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;
 
 class CategoriasController extends Controller {
@@ -13,7 +14,7 @@ class CategoriasController extends Controller {
 
     public function __construct() {
         $this->middleware(AuthMiddleware::class);
-        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
+        $this->middleware(SessionTimeoutMiddleware::class);
         $this->categoriaDao = new CategoriaDAO();
     }
 

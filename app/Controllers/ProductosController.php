@@ -7,6 +7,7 @@ use Framework\Core\Request;
 use App\Models\ProductoDAO;
 use App\Models\CategoriaDAO;
 use App\Models\Entity\Producto;
+use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;
 
 class ProductosController extends Controller
@@ -17,7 +18,7 @@ class ProductosController extends Controller
     public function __construct()
     {
         $this->middleware(AuthMiddleware::class);
-        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
+        $this->middleware(SessionTimeoutMiddleware::class);
         $this->productoDao = new ProductoDAO();
         $this->categoriaDao = new CategoriaDAO();
     }
