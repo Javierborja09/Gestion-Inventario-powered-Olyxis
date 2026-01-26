@@ -1,50 +1,42 @@
 <?php
-namespace App\Controllers;
 
+namespace App\Controllers;
 use Framework\Core\Controller;
 use Framework\Core\Request;
 use App\Models\ProductoDAO;
 use App\Models\VentaDAO;
 use App\Middlewares\AuthMiddleware;
 
-class VentasController extends Controller {
-    private $productoDao;
-    private $ventaDao;
+class VentasController extends Controller
+{
+    private ProductoDAO $productoDao;
+    private VentaDAO $ventaDao;
 
-    public function __construct() {
-        AuthMiddleware::handle(new Request());
+    public function __construct()
+    {
+        $this->middleware(AuthMiddleware::class);
+        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
         $this->productoDao = new ProductoDAO();
         $this->ventaDao = new VentaDAO();
     }
 
-    public function index($request) {
+    public function index(Request $request)
+    {
         return $this->view('ventas/index', [
-            'title' => 'Módulo de Ventas',
+            'title'     => 'Módulo de Ventas',
             'productos' => $this->productoDao->getAll(),
-            'ventas' => $this->ventaDao->getAll(),
-            'flash_success' => $request->getFlash('success'),
-            'flash_error' => $request->getFlash('error')
+            'ventas'    => $this->ventaDao->getAll()
         ], 'layouts/main');
     }
 
-    /**
-     * Muestra el reporte con filtros de fecha
-     */
-    public function reportes($request) {
-        // Capturar fechas de la URL (GET)
-        $inicio = $request->get('fecha_inicio');
-        $fin = $request->get('fecha_fin');
-
-        return $this->view('ventas/reportes', [
-            'title'   => 'Reporte de Ventas',
-            'resumen' => $this->ventaDao->getResumenGeneral($inicio, $fin),
-            'ventas'  => $this->ventaDao->getAll($inicio, $fin)
-        ], 'layouts/main');
-    }
-
-    public function store_lote($request) {
+    public function store_lote(Request $request)
+    {
         $items = $request->post('items');
-        if (empty($items)) return $request->redirect('/ventas');
+
+        if (empty($items)) {
+            $request->setFlash('error', '⚠️ La lista de venta está vacía.');
+            return $this->redirect('/ventas');
+        }
 
         $exito = true;
         foreach ($items as $item) {
@@ -58,9 +50,24 @@ class VentasController extends Controller {
             }
         }
 
-        if ($exito) $request->setFlash('success', '✅ Venta procesada con éxito.');
-        else $request->setFlash('error', '❌ Error al procesar uno o más productos.');
+        if ($exito) {
+            $request->setFlash('success', '✅ Venta procesada con éxito y stock actualizado.');
+        } else {
+            $request->setFlash('error', '❌ Error crítico al procesar la venta. Intente de nuevo.');
+        }
 
-        return $request->redirect('/ventas');
+        return $this->redirect('/ventas');
+    }
+
+    public function reportes(Request $request)
+    {
+        $inicio = $request->get('fecha_inicio');
+        $fin = $request->get('fecha_fin');
+
+        return $this->view('ventas/reportes', [
+            'title'   => 'Reporte de Ventas',
+            'resumen' => $this->ventaDao->getResumenGeneral($inicio, $fin),
+            'ventas'  => $this->ventaDao->getAll($inicio, $fin)
+        ], 'layouts/main');
     }
 }

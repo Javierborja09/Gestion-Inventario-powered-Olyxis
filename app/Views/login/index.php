@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?></title>
+    <title><?= $title ?? 'Login' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
@@ -24,12 +24,18 @@
                         <p class="text-muted small">Ingresa tus credenciales para continuar</p>
                     </div>
 
-                    <?php if (isset($flash_error)): ?>
-                        <?php component('Alert', ['type' => 'error', 'message' => $flash_error]); ?>
+                    <?php 
+                    // 1. Obtenemos los mensajes directamente del objeto request/session
+                    $error = $request->getFlash('error');
+                    $success = $request->getFlash('success');
+                    ?>
+
+                    <?php if ($error): ?>
+                        <?php component('Alert', ['type' => 'error', 'message' => $error]); ?>
                     <?php endif; ?>
 
-                    <?php if (isset($flash_success)): ?>
-                        <?php component('Alert', ['type' => 'success', 'message' => $flash_success]); ?>
+                    <?php if ($success): ?>
+                        <?php component('Alert', ['type' => 'success', 'message' => $success]); ?>
                     <?php endif; ?>
 
                     <form action="/login" method="POST">

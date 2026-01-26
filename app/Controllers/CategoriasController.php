@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use Framework\Core\Controller;
@@ -11,24 +12,23 @@ class CategoriasController extends Controller {
     private CategoriaDAO $categoriaDao;
 
     public function __construct() {
-        AuthMiddleware::handle(new Request());
+        $this->middleware(AuthMiddleware::class);
+        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
         $this->categoriaDao = new CategoriaDAO();
     }
 
-    public function index($request) {
+    public function index(Request $request) {
         return $this->view('categorias/index', [
             'title' => 'Gestión de Categorías',
-            'categorias' => $this->categoriaDao->getAll(),
-            'flash_success' => $request->getFlash('success'),
-            'flash_error' => $request->getFlash('error')
+            'categorias' => $this->categoriaDao->getAll()
         ], 'layouts/main');
     }
 
-    public function store($request) {
+    public function store(Request $request) {
         $data = $request->post();
         if (empty($data['nombre'])) {
             $request->setFlash('error', 'El nombre es obligatorio.');
-            return $request->redirect('/categorias');
+            return $this->redirect('/categorias');
         }
 
         if ($this->categoriaDao->create(new Categoria($data))) {
@@ -36,33 +36,32 @@ class CategoriasController extends Controller {
         } else {
             $request->setFlash('error', 'Error al crear la categoría.');
         }
-        return $request->redirect('/categorias');
+        return $this->redirect('/categorias');
     }
 
-    public function update($request) {
+    public function update(Request $request) {
         $data = $request->post();
         $id = $data['id'] ?? null;
 
         if (!$id || empty($data['nombre'])) {
             $request->setFlash('error', 'Datos inválidos.');
-            return $request->redirect('/categorias');
+            return $this->redirect('/categorias');
         }
-
-        // Necesitarás agregar el método update a tu CategoriaDAO
+        
         if ($this->categoriaDao->update(new Categoria($data))) {
             $request->setFlash('success', 'Categoría actualizada.');
         } else {
             $request->setFlash('error', 'No se pudo actualizar.');
         }
-        return $request->redirect('/categorias');
+        return $this->redirect('/categorias');
     }
 
-    public function destroy($request, $id) {
+    public function destroy(Request $request, $id) {
         if ($this->categoriaDao->delete($id)) {
             $request->setFlash('success', 'Categoría eliminada.');
         } else {
             $request->setFlash('error', 'No se puede eliminar (revisa si tiene productos asociados).');
         }
-        return $request->redirect('/categorias');
+        return $this->redirect('/categorias');
     }
 }

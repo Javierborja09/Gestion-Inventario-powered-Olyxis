@@ -6,6 +6,7 @@ return [
         '/categorias' => 'CategoriasController@index',
         '/productos' => 'ProductosController@index',
         '/ventas' => 'VentasController@index',
+        
         '/ventas/reportes' => 'VentasController@reportes',
     ],
     'POST' => [

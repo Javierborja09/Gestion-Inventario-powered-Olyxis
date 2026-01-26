@@ -1,17 +1,20 @@
-<div class="container py-4">
-    <h2 class="mb-4 fw-bold">Gestión de Categorías</h2>
+<h1>Gestión de Categorías</h1>
 
-    <?php if (isset($flash_success)): ?>
-        <?php component('Alert', ['type' => 'success', 'message' => $flash_success]); ?>
-    <?php endif; ?>
+<?php
+$success = $request->getFlash('success');
+$error = $request->getFlash('error');
+?>
 
-    <?php if (isset($flash_error)): ?>
-        <?php component('Alert', ['type' => 'error', 'message' => $flash_error]); ?>
-    <?php endif; ?>
+<?php if ($success): ?>
+    <?php component('Alert', ['type' => 'success', 'message' => $success]); ?>
+<?php endif; ?>
 
-    <?php component('CategoriaForm'); ?>
+<?php if ($error): ?>
+<?php component('Alert', ['type' => 'error', 'message' => $error]); ?>
+<?php endif; ?>
 
-    <?php component('CategoriaTable', ['categorias' => $categorias]); ?>
+<?php component('CategoriaForm'); ?>
 
-    <?php component('EditarCategoriaModal'); ?>
-</div>
+<?php component('CategoriaTable', ['categorias' => $categorias ?? []]); ?>
+
+<?php component('EditarCategoriaModal'); ?>

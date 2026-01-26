@@ -16,28 +16,28 @@ class ProductosController extends Controller
 
     public function __construct()
     {
-        AuthMiddleware::handle(new Request());
+        $this->middleware(AuthMiddleware::class);
+        $this->middleware(\App\Middlewares\SessionTimeoutMiddleware::class);
         $this->productoDao = new ProductoDAO();
         $this->categoriaDao = new CategoriaDAO();
     }
 
-    public function index($request)
+    public function index(Request $request)
     {
         return $this->view('productos/index', [
-            'title'         => 'Gestión de Productos',
-            'productos'     => $this->productoDao->getAll(),
-            'categorias'    => $this->categoriaDao->getAll(),
-            'flash_success' => $request->getFlash('success'),
-            'flash_error'   => $request->getFlash('error')
+            'title'      => 'Gestión de Productos',
+            'productos'  => $this->productoDao->getAll(),
+            'categorias' => $this->categoriaDao->getAll(),
+            
         ], 'layouts/main');
     }
 
-    public function store($request)
+    public function store(Request $request)
     {
         $data = $request->post();
         if (!$this->categoriaDao->getById($data['categoria_id'])) {
             $request->setFlash('error', '❌ Error: La categoría seleccionada no existe.');
-            return $request->redirect('/productos');
+            return $this->redirect('/productos');
         }
 
         $nuevoProducto = new Producto($data);
@@ -48,21 +48,22 @@ class ProductosController extends Controller
             $request->setFlash('error', 'Error al guardar el producto.');
         }
 
-        return $request->redirect('/productos');
+        return $this->redirect('/productos');
     }
 
-    public function update($request)
+    public function update(Request $request)
     {
         $data = $request->post();
         $id = $data['id'] ?? null;
 
         if (!$id) {
             $request->setFlash('error', '❌ ID de producto no válido.');
-            return $request->redirect('/productos');
+            return $this->redirect('/productos');
         }
+
         if (!$this->categoriaDao->getById($data['categoria_id'])) {
             $request->setFlash('error', '❌ Error: La categoría seleccionada no es válida.');
-            return $request->redirect('/productos');
+            return $this->redirect('/productos');
         }
 
         $productoActualizado = new Producto($data);
@@ -73,10 +74,10 @@ class ProductosController extends Controller
             $request->setFlash('error', '❌ Error al actualizar en la base de datos.');
         }
 
-        return $request->redirect('/productos');
+        return $this->redirect('/productos');
     }
 
-    public function destroy($request, $id)
+    public function destroy(Request $request, $id)
     {
         if ($this->productoDao->delete($id)) {
             $request->setFlash('success', 'Producto eliminado correctamente.');
@@ -84,6 +85,6 @@ class ProductosController extends Controller
             $request->setFlash('error', 'No se pudo eliminar el producto.');
         }
 
-        return $request->redirect('/productos');
+        return $this->redirect('/productos');
     }
 }

@@ -1,10 +1,7 @@
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0 text-dark">Reporte General de Ventas</h2>
-        <button onclick="window.print()" class="btn btn-outline-dark shadow-sm">
-            <i class="bi bi-printer me-2"></i>Imprimir Reporte
-        </button>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0 text-dark">Reporte General de Ventas</h2>
+</div>
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">

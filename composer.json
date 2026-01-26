@@ -2,7 +2,8 @@
     "name": "javierborja09/gestion-inventario",
     "description": "Sistema de Inventario powered by Olyxis",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "dompdf/dompdf": "^3.1"
     },
     "autoload": {
         "psr-4": {

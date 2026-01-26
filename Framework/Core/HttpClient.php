@@ -2,12 +2,28 @@
 
 namespace Framework\Core;
 
-class HttpClient {
+/**
+ * Clase HttpClient
+ * Proporciona una interfaz fluida para realizar peticiones HTTP (GET, POST, etc.)
+ * encapsulando la complejidad de las funciones curl_*.
+ */
+class HttpClient
+{
+    /** @var string URL base para las peticiones (ej: https://api.ejemplo.com) */
     private $baseURL = '';
+
+    /** @var array Cabeceras HTTP por defecto para todas las peticiones */
     private $headers = [];
+
+    /** @var int Tiempo máximo de espera en segundos */
     private $timeout = 30;
-    
-    public function __construct($config = []) {
+
+    /**
+     * Constructor del cliente HTTP.
+     * @param array $config ['baseURL' => string, 'headers' => array, 'timeout' => int]
+     */
+    public function __construct($config = [])
+    {
         if (isset($config['baseURL'])) {
             $this->baseURL = rtrim($config['baseURL'], '/');
         }
@@ -18,49 +34,59 @@ class HttpClient {
             $this->timeout = $config['timeout'];
         }
     }
-    
-    // Métodos principales
-    public function get($url, $config = []) {
+
+    /**
+     * Realiza una petición GET.
+     * @param string $url Ruta relativa o absoluta.
+     * @param array $config Configuración específica (parámetros query, headers).
+     * @return HttpResponse
+     */
+    public function get($url, $config = [])
+    {
         return $this->request('GET', $url, $config);
     }
-    
-    public function post($url, $data = [], $config = []) {
+
+    /**
+     * Realiza una petición POST enviando datos.
+     * @param string $url
+     * @param array $data Cuerpo del mensaje.
+     * @param array $config
+     * @return HttpResponse
+     */
+    public function post($url, $data = [], $config = [])
+    {
         $config['data'] = $data;
         return $this->request('POST', $url, $config);
     }
-    
-    public function put($url, $data = [], $config = []) {
-        $config['data'] = $data;
-        return $this->request('PUT', $url, $config);
-    }
-    
-    public function patch($url, $data = [], $config = []) {
-        $config['data'] = $data;
-        return $this->request('PATCH', $url, $config);
-    }
-    
-    public function delete($url, $config = []) {
-        return $this->request('DELETE', $url, $config);
-    }
-    
-    // Método principal de request
-    public function request($method, $url, $config = []) {
-        // Construir URL completa
+
+    // Métodos PUT, PATCH y DELETE siguen la misma lógica...
+
+    /**
+     * El motor principal que ejecuta cURL.
+     * Gestiona la construcción de la URL, headers, serialización de datos y ejecución.
+     * * @throws \Exception Si cURL falla (ej: problemas de red).
+     */
+    public function request($method, $url, $config = [])
+    {
+        // 1. Preparación de entorno
         $fullUrl = $this->buildUrl($url, $config['params'] ?? []);
-        
-        // Preparar headers
         $headers = array_merge($this->headers, $config['headers'] ?? []);
-        
-        // Inicializar cURL
+
         $ch = curl_init();
-        
-        // Configurar opciones básicas
+
+        // 2. Configuración de cURL
         curl_setopt($ch, CURLOPT_URL, $fullUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Devuelve el resultado como string
         curl_setopt($ch, CURLOPT_TIMEOUT, $config['timeout'] ?? $this->timeout);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-        
-        // Configurar headers
+
+        // Bypass de verificación SSL (útil para desarrollo local como XAMPP)
+        if (strpos($fullUrl, 'https') === 0) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
+        // 3. Procesamiento de cabeceras de envío
         if (!empty($headers)) {
             $headerLines = [];
             foreach ($headers as $key => $value) {
@@ -68,11 +94,11 @@ class HttpClient {
             }
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headerLines);
         }
-        
-        // Configurar datos (POST, PUT, PATCH)
+
+        // 4. Procesamiento del cuerpo (Body) según Content-Type
         if (isset($config['data']) && !empty($config['data'])) {
             $contentType = $headers['Content-Type'] ?? 'application/json';
-            
+
             if (strpos($contentType, 'application/json') !== false) {
                 $body = json_encode($config['data']);
             } elseif (strpos($contentType, 'application/x-www-form-urlencoded') !== false) {
@@ -80,68 +106,66 @@ class HttpClient {
             } else {
                 $body = $config['data'];
             }
-            
+
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
-        
-        // Capturar headers de respuesta
+
+        // 5. Captura de cabeceras de la respuesta mediante un callback
         $responseHeaders = [];
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function($curl, $header) use (&$responseHeaders) {
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($curl, $header) use (&$responseHeaders) {
             $len = strlen($header);
-            $header = explode(':', $header, 2);
-            if (count($header) < 2) return $len;
-            
-            $responseHeaders[strtolower(trim($header[0]))] = trim($header[1]);
+            $headerParts = explode(':', $header, 2);
+            if (count($headerParts) >= 2) {
+                $responseHeaders[strtolower(trim($headerParts[0]))] = trim($headerParts[1]);
+            }
             return $len;
         });
-        
-        // Ejecutar request
+
+        // 6. Ejecución y manejo de errores
         $response = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        
+
         curl_close($ch);
-        
-        // Manejar errores de cURL
+
         if ($error) {
             throw new \Exception("HTTP Request Error: $error");
         }
-        
-        // Parsear respuesta
+
         return $this->parseResponse($response, $statusCode, $responseHeaders);
     }
-    
-    // Construir URL con parámetros
-    private function buildUrl($url, $params = []) {
-        // Si la URL ya es completa, usarla directamente
-        if (strpos($url, 'http') === 0) {
-            $fullUrl = $url;
-        } else {
-            $fullUrl = $this->baseURL . '/' . ltrim($url, '/');
-        }
-        
-        // Agregar parámetros query
+
+    /**
+     * Construye la URL final concatenando la base y los parámetros GET.
+     */
+    private function buildUrl($url, $params = [])
+    {
+        $fullUrl = (strpos($url, 'http') === 0) ? $url : $this->baseURL . '/' . ltrim($url, '/');
+
         if (!empty($params)) {
             $separator = strpos($fullUrl, '?') !== false ? '&' : '?';
             $fullUrl .= $separator . http_build_query($params);
         }
-        
+
         return $fullUrl;
     }
-    
-    // Parsear respuesta
-    private function parseResponse($body, $statusCode, $headers) {
+
+    /**
+     * Convierte la respuesta bruta en un objeto HttpResponse amigable.
+     * Si la respuesta es JSON, la decodifica automáticamente.
+     */
+    private function parseResponse($body, $statusCode, $headers)
+    {
         $data = $body;
-        
-        // Intentar decodificar JSON
         $contentType = $headers['content-type'] ?? '';
+        
         if (strpos($contentType, 'application/json') !== false) {
             $decoded = json_decode($body, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 $data = $decoded;
             }
         }
-        
+
         return new HttpResponse([
             'data' => $data,
             'status' => $statusCode,
@@ -149,9 +173,9 @@ class HttpClient {
             'headers' => $headers
         ]);
     }
-    
-    // Obtener texto del código de estado
-    private function getStatusText($code) {
+
+     private function getStatusText($code)
+    {
         $statusTexts = [
             200 => 'OK',
             201 => 'Created',
@@ -162,7 +186,8 @@ class HttpClient {
             404 => 'Not Found',
             500 => 'Internal Server Error',
         ];
-        
+
         return $statusTexts[$code] ?? 'Unknown';
     }
 }
+

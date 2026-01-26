@@ -1,9 +1,16 @@
+<h1>Gestión de Ventas</h1>
 <div class="container-fluid">
-    <?php if (isset($flash_success)): ?>
-        <?php component('Alert', ['type' => 'success', 'message' => $flash_success]); ?>
+    <?php 
+    $success = $request->getFlash('success');
+    $error = $request->getFlash('error');
+    ?>
+
+    <?php if ($success): ?>
+        <?php component('Alert', ['type' => 'success', 'message' => $success]); ?>
     <?php endif; ?>
-    <?php if (isset($flash_error)): ?>
-        <?php component('Alert', ['type' => 'error', 'message' => $flash_error]); ?>
+
+    <?php if ($error): ?>
+        <?php component('Alert', ['type' => 'error', 'message' => $error]); ?>
     <?php endif; ?>
 
     <div class="row">
