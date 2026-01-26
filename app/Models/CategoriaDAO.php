@@ -19,13 +19,12 @@ class CategoriaDAO
      */
     public function getAll(): array
     {
-        // Llamamos al nuevo procedimiento almacenado
         $stmt = $this->db->call('sp_listar_categorias');
         $rows = $stmt->fetchAll();
 
         $categorias = [];
         foreach ($rows as $row) {
-            $categorias[] = new \App\Models\Entity\Categoria($row);
+            $categorias[] = new Categoria($row);
         }
 
         return $categorias;
@@ -52,6 +51,20 @@ class CategoriaDAO
             'descripcion' => $categoria->descripcion
         ];
         return (bool) $this->db->insert('categorias', $data);
+    }
+
+    /**
+     * Actualiza una categoría existente
+     * Agregado para completar CategoriasController@update
+     */
+    public function update(Categoria $categoria): bool
+    {
+        $data = [
+            'nombre' => $categoria->nombre,
+            'descripcion' => $categoria->descripcion
+        ];
+
+        return (bool) $this->db->update('categorias', $data, "id = ?", [$categoria->id]);
     }
 
     /**

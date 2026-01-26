@@ -1,3 +1,4 @@
 /vendor/
 .env
-*.log
+*.loggit rm -r --cached .
+git add .
