@@ -104,12 +104,12 @@ Para visualizar el proyecto en funcionamiento, utiliza el comando de consola pro
 
 **Opción rápida:**
 ```bash
-php bin/olyxis serve
+php olyxis serve
 ```
 
 **Puerto personalizado:**
 ```bash
-php bin/olyxis serve localhost 5000
+php olyxis serve localhost 5000
 ```
 
 **Usuario Predefinido:**
