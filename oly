@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+// 1. Cargar Autoloaders
 $internalAutoloader = __DIR__ . '/vendor/autoload.php';
 $currentAutoloader = getcwd() . '/vendor/autoload.php';
 
@@ -12,37 +13,8 @@ if (file_exists($internalAutoloader)) {
     die("❌ Error: No se encontró 'vendor/autoload.php'.\n");
 }
 
-use Framework\Console\Commands\InitCommand;
-use Framework\Console\Commands\ServeCommand;
-use Framework\Console\Commands\MakeControllerCommand;
+// 2. Ejecutar el Kernel
+use Framework\Console\Kernel;
 
-function displayHelp() {
-    echo "\n";
-    echo "╔════════════════════════════════════════╗\n";
-    echo "║    🚀 Olyxis CLI v2.0 Stable           ║\n";
-    echo "╚════════════════════════════════════════╝\n\n";
-    echo "Comandos disponibles:\n";
-    echo "  ├─ init             Inicializa un nuevo proyecto\n";
-    echo "  ├─ serve            Inicia el servidor de desarrollo\n";
-    echo "  └─ make:controller  Crea un nuevo controlador\n\n";
-    echo "Ejemplo: php olyxis make:controller User\n\n";
-}
-
-$command = $argv[1] ?? 'help';
-$args = array_slice($argv, 2);
-
-switch ($command) {
-    case 'init':
-        (new InitCommand())->execute($args);
-        break;
-    case 'serve':
-        (new ServeCommand())->execute($args);
-        break;
-    case 'make:controller':
-        (new MakeControllerCommand())->execute($args);
-        break;
-    case 'help':
-    default:
-        displayHelp(); 
-        break;
-}
+$kernel = new Kernel();
+$kernel->handle($argv);

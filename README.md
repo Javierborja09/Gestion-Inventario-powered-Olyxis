@@ -111,6 +111,9 @@ Para garantizar la integridad de los datos, este sistema ha sido sometido a rigu
 
 <div align="center">
 
+### 🔐 Login de Acceso
+![login](public/images/login.png)
+
 ### 🏷️ Gestión de Categorías
 ![Gestión de Categorías](public/images/categorias.png)
 
