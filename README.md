@@ -1,7 +1,7 @@
 # 📦 Gestión de Inventario - Powered by Olyxis
 
 <div align="center">
-  
+  <img src="https://i.ibb.co/6qZYGrY/gestion.png" alt="Gestion Inventario Banner" width="100%"/>
   ![Gestión de Inventario](https://img.shields.io/badge/Gestión-Inventario-blue?style=for-the-badge&logo=dropbox&logoColor=white)
   ![Powered by Olyxis](https://img.shields.io/badge/Powered%20by-Olyxis-purple?style=for-the-badge)
   
@@ -212,8 +212,7 @@ Gestion-Inventario-powered-Olyxis/
 │   ├── Middlewares/     # Seguridad y filtros
 │   └── Views/           # Vistas del sistema
 ├── 📂 config/
-│   ├── routes.php       # Definición de rutas
-│   └── database.php     # Configuración de BD
+│   └── routes.php       # Definición de rutas
 ├── 📂 public/
 │   ├── images/          # Screenshots y recursos
 │   ├── css/
@@ -267,7 +266,7 @@ Las contribuciones son bienvenidas. Por favor, abre un **issue** o **pull reques
 
 ### Cómo Contribuir:
 
-1. Fork el proyecto
+1. Fork el proyecto desde [Gestión-Inventario-powered-Olyxis](https://github.com/Javierborja09/Gestion-Inventario-powered-Olyxis)
 2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
