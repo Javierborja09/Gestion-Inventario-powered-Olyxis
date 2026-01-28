@@ -1,7 +1,8 @@
 # 📦 Gestión de Inventario - Powered by Olyxis
-
 <div align="center">
-  <img src="https://i.ibb.co/cX188ZXj/inve.png" alt="Gestion Inventario Banner" width="100%" >
+  <img src="https://i.ibb.co/6qZYGrY/gestion.png" style="width: 100%; height: auto; display: block;">
+</div>
+<div align="center">
   ![Gestión de Inventario](https://img.shields.io/badge/Gestión-Inventario-blue?style=for-the-badge&logo=dropbox&logoColor=white)
   ![Powered by Olyxis](https://img.shields.io/badge/Powered%20by-Olyxis-purple?style=for-the-badge)
   
