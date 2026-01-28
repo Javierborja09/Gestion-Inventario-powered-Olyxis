@@ -158,6 +158,9 @@
                     <li class="<?= ($currentPath == '/categorias') ? 'active' : '' ?>">
                         <a href="/categorias"><i class="bi bi-tags me-2"></i> Categorías</a>
                     </li>
+                     <li class="<?= ($currentPath == '/kardex') ? 'active' : '' ?>">
+                        <a href="/kardex"><i class="bi bi-tags me-2"></i> Kardex</a>
+                    </li>
                     <li class="<?= (strpos($currentPath, '/ventas') !== false && strpos($currentPath, 'reportes') === false) ? 'active' : '' ?>">
                         <a href="/ventas"><i class="bi bi-cart-check me-2"></i> Ventas</a>
                     </li>

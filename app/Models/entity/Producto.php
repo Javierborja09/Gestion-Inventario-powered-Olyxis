@@ -8,7 +8,7 @@ class Producto {
     public ?string $descripcion;
     public float $precio;
     public int $stock;
-    public ?string $categoria_nombre; // Para cuando hagamos JOINs
+    public ?string $categoria_nombre;
 
     public function __construct(array $data = []) {
         $this->id = $data['id'] ?? null;

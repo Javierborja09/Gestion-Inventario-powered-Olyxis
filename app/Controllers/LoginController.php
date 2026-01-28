@@ -6,9 +6,11 @@ use Framework\Core\Controller;
 use Framework\Core\Hash;
 use Framework\Core\Request;
 use App\Models\UsuarioDAO;
+use App\Traits\Auditable;
 
 class LoginController extends Controller
 {
+    use Auditable; 
 
     public function index(Request $request)
     {
@@ -20,7 +22,6 @@ class LoginController extends Controller
         ], null);
     }
 
-
     public function authenticate(Request $request)
     {
         $username = $request->post('username');
@@ -28,9 +29,11 @@ class LoginController extends Controller
 
         $userDao = new UsuarioDAO();
         $user = $userDao->findByUsername($username);
+
         if ($user && Hash::verify($password, $user->password)) {
             $request->session()->set('user_id', $user->id);
             $request->session()->set('user_name', $user->nombre);
+            $this->registrarKardex($request, 'SEGURIDAD', 'LOGIN', "Inicio de sesión exitoso.", $user->nombre);
 
             $request->setFlash('success', 'Bienvenido de nuevo, ' . $user->nombre);
 
@@ -41,9 +44,13 @@ class LoginController extends Controller
         return $this->redirect('/');
     }
 
-
     public function logout(Request $request)
     {
+        $usuarioNombre = $request->session()->get('user_name');
+        if ($usuarioNombre) {
+            $this->registrarKardex($request, 'SEGURIDAD', 'LOGOUT', "Cierre de sesión voluntario", $usuarioNombre);
+        }
+
         $request->session()->destroy();
         return $this->redirect('/?logout=success');
     }

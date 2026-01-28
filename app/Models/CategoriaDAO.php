@@ -30,6 +30,8 @@ class CategoriaDAO
         return $categorias;
     }
 
+    
+
     /**
      * Obtiene una categoría por su ID
      */

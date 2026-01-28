@@ -55,8 +55,18 @@ CREATE TABLE ventas (
     INDEX idx_producto (producto_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE kardex (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    modulo VARCHAR(50) NOT NULL, -- 'PRODUCTOS', 'CATEGORIAS', 'VENTAS'
+    accion VARCHAR(50) NOT NULL, -- 'CREAR', 'EDITAR', 'ELIMINAR', 'VENTA'
+    usuario_nombre VARCHAR(100) NOT NULL, -- Quién lo hizo
+    descripcion TEXT NOT NULL, -- Ej: "Se cambió el nombre de la categoría X a Y"
+    referencia_nombre VARCHAR(150), -- Nombre del objeto afectado (ej: "Laptop HP")
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_modulo (modulo),
+    INDEX idx_fecha (fecha)
+) ENGINE=InnoDB;
 -- 3. DATOS DE PRUEBA
-
 -- Insertar usuario administrador
 INSERT INTO usuarios (username, password, nombre) 
 VALUES ('admin', '$2y$10$q58uA2.Gdof9Kss4BmkaFOW5eG3ANYEzRCW8jW45zLBKvztUKPN/S', 'Administrador');
@@ -214,7 +224,7 @@ BEGIN
         p.created_at
     FROM productos p
     INNER JOIN categorias c ON p.categoria_id = c.id
-    ORDER BY p.id ASC;
+    ORDER BY p.nombre ASC;
 END //
 
 -- Procedimiento: Buscar usuario por username
@@ -278,6 +288,34 @@ BEGIN
     END IF;
 END //
 
+
+CREATE PROCEDURE sp_buscar_kardex(
+    IN p_producto_id INT,        -- Filtro por ID (opcional)
+    IN p_fecha_inicio DATE,      -- Filtro fecha inicio (opcional)
+    IN p_fecha_fin DATE          -- Filtro fecha fin (opcional)
+)
+BEGIN
+    SELECT 
+        id,
+        modulo,
+        accion,
+        usuario_nombre AS usuario,
+        descripcion,
+        referencia_nombre AS nombre_item,
+        fecha
+    FROM kardex
+    WHERE 
+        -- Filtro por referencia/producto si se envía un nombre o ID
+        (p_producto_id IS NULL OR id = p_producto_id)
+        AND
+        -- Filtro por rango de fechas
+        (
+            (p_fecha_inicio IS NULL AND p_fecha_fin IS NULL)
+            OR (DATE(fecha) BETWEEN p_fecha_inicio AND p_fecha_fin)
+        )
+    ORDER BY fecha DESC;
+END //
+
 -- Procedimiento: Listar ventas con filtro de fechas
 CREATE PROCEDURE sp_listar_ventas_filtrado(
     IN p_fecha_inicio DATE,
@@ -334,3 +372,7 @@ FROM categorias c
 LEFT JOIN productos p ON c.id = p.categoria_id
 GROUP BY c.id, c.nombre
 ORDER BY c.id;
+
+
+call sp_buscar_kardex(null,null,null)
+

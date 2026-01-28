@@ -16,13 +16,11 @@ class Usuario {
         $this->created_at = $data['created_at'] ?? null;
     }
 
-    /**
-     * Convierte el objeto a array para inserciones
-     */
+
     public function toArray(): array {
         return [
             'username' => $this->username,
-            'password' => $this->password, // Recuerda encriptarla antes de enviarla aquí
+            'password' => $this->password,
             'nombre'   => $this->nombre
         ];
     }

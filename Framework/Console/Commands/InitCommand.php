@@ -27,7 +27,7 @@ class InitCommand extends Command
         $this->success("Autoloader actualizado correctamente.");
         $this->success("\n¡Proyecto inicializado correctamente! 🎉");
         $this->info("\nPara iniciar el servidor ejecuta:");
-        $this->info("   php bin/olyxis serve\n");
+        $this->info("   php oly serve\n");
     }
 
     private function copyFrameworkCore()
@@ -89,21 +89,29 @@ PHP;
         }
     }
 
-    private function createLocalBin()
-    {
-        $binDir = getcwd() . '/bin';
-        if (!is_dir($binDir)) {
-            mkdir($binDir, 0777, true);
-        }
-        $originalBin = __DIR__ . '/../../../bin/olyxis';
-        $newBin = $binDir . '/olyxis';
+private function createLocalBin()
+{
+    $currentDir = getcwd();
+    $destinationPath = $currentDir . DIRECTORY_SEPARATOR . 'oly';
 
-        if (file_exists($originalBin)) {
-            copy($originalBin, $newBin);
-            chmod($newBin, 0755);
-            $this->info("✔️ Binario local creado en bin/olyxis");
+    $originalBin = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'oly';
+
+    if (file_exists($originalBin) && !is_dir($originalBin)) {
+        if (is_dir($destinationPath)) {
+             $this->error("⚠️ No se pudo copiar el binario: Ya existe una carpeta llamada 'oly' en la raíz.");
+             return;
         }
+
+        if (copy($originalBin, $destinationPath)) {
+            chmod($destinationPath, 0755);
+            $this->info("✔️ Binario local creado en la raíz: ./oly");
+        } else {
+            $this->error("❌ Error al copiar el binario a: " . $destinationPath);
+        }
+    } else {
+        $this->error("❌ No se encontró el binario fuente en: " . $originalBin);
     }
+}
 
     private function createDirectories()
     {
@@ -151,17 +159,6 @@ return [
 ];
 PHP;
         $this->createFile('config/routes.php', $routesContent);
-
-        $appContent = <<<'PHP'
-<?php
-return [
-    'name' => 'Mi Aplicación',
-    'env' => 'local',
-    'debug' => true,
-    'url' => 'http://localhost:8000',
-];
-PHP;
-        $this->createFile('config/app.php', $appContent);
     }
 
     private function createControllers()
@@ -347,23 +344,10 @@ PHP;
 
     private function createComposerJson()
     {
-        $frameworkPath = realpath(__DIR__ . '/../../..');
-        $projectPath = getcwd();
-        $relativePath = $this->getRelativePath($projectPath, $frameworkPath);
-
         $composerContent = <<<JSON
 {
     "require": {
         "php": ">=8.0"
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "$relativePath"
-        }
-    ],
-    "require-dev": {
-        "javierborja09/olyxis": "@dev"
     },
     "autoload": {
         "psr-4": {

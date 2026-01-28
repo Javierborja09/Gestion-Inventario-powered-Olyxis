@@ -1,12 +1,12 @@
 <?php
 return [
     'GET' => [
+        '/kardex' => 'KardexController@index',
         '/' => 'LoginController@index',
         '/logout' => 'LoginController@logout',
         '/categorias' => 'CategoriasController@index',
         '/productos' => 'ProductosController@index',
-        '/ventas' => 'VentasController@index',
-        
+        '/ventas' => 'VentasController@index',  
         '/ventas/reportes' => 'VentasController@reportes',
     ],
     'POST' => [

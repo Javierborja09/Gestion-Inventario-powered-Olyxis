@@ -1,16 +1,20 @@
 <?php
 
 namespace App\Controllers;
+
 use Framework\Core\Controller;
 use Framework\Core\Request;
 use App\Models\ProductoDAO;
 use App\Models\VentaDAO;
+use App\Traits\Auditable; // Importamos el Trait de Olyxis
 
 use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;
 
 class VentasController extends Controller
 {
+    use Auditable; 
+
     private ProductoDAO $productoDao;
     private VentaDAO $ventaDao;
 
@@ -42,11 +46,22 @@ class VentasController extends Controller
 
         $exito = true;
         foreach ($items as $item) {
-            if (!$this->ventaDao->create([
+            if ($this->ventaDao->create([
                 'producto_id' => $item['id'],
                 'cantidad'    => $item['cantidad'],
                 'precio'      => $item['precio']
             ])) {
+                $nombreProducto = $item['nombre'] ?? "Producto ID: " . $item['id'];
+                
+                $this->registrarKardex(
+                    $request, 
+                    'VENTAS', 
+                    'VENTA', 
+                    "Salida por venta de {$item['cantidad']} unidades a S/ {$item['precio']}", 
+                    $nombreProducto
+                );
+
+            } else {
                 $exito = false;
                 break;
             }

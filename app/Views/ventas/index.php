@@ -215,7 +215,6 @@ function eliminar(index) {
     carrito.splice(index, 1);
     renderizarCarrito();
 }
-
 function generarTicket() {
     const tFecha = document.getElementById('t_fecha');
     const tCuerpo = document.getElementById('t_cuerpo');
@@ -237,9 +236,39 @@ function generarTicket() {
     tTotal.textContent = '$' + totalVenta.toFixed(2);
 
     const ventanaP = window.open('', '_blank');
-    ventanaP.document.write('<html><head><title>Ticket</title></head><body>' + document.getElementById('ticket_print').innerHTML + '</body></html>');
+    ventanaP.document.write(`
+        <html>
+        <head>
+            <title>Ticket de Venta</title>
+            <style>
+                @media print {
+                    @page {
+                        size: 80mm auto;
+                        margin: 0;
+                    }
+                    body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+                body {
+                    width: 80mm;
+                    margin: 0 auto;
+                    padding: 10px;
+                    font-family: 'Courier New', monospace;
+                    font-size: 12px;
+                }
+            </style>
+        </head>
+        <body>
+            ${document.getElementById('ticket_print').innerHTML}
+        </body>
+        </html>
+    `);
     ventanaP.document.close();
-    ventanaP.print();
-    ventanaP.close();
+    setTimeout(() => {
+        ventanaP.print();
+        ventanaP.close();
+    }, 250);
 }
 </script>

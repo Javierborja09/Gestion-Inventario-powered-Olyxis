@@ -21,13 +21,25 @@ class ProductoDAO
     {
         $stmt = $this->db->call('sp_listar_productos');
         $rows = $stmt->fetchAll();
-        
+
         $productos = [];
         foreach ($rows as $row) {
             $productos[] = new Producto($row);
         }
 
         return $productos;
+    }
+
+    /**
+     * Obtiene un producto específico por su ID
+     */
+    public function getById($id): ?Producto
+    {
+        $sql = "SELECT * FROM productos WHERE id = ?";
+        // Usamos fetch de tu clase Database que ya retorna el array asociativo
+        $row = $this->db->fetch($sql, [$id]);
+
+        return $row ? new Producto($row) : null;
     }
 
     public function update(Producto $producto): bool
