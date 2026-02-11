@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\DAOS;
 
 use Framework\Core\Database;
 

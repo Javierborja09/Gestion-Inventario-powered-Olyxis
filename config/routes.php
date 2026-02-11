@@ -8,6 +8,7 @@ return [
         '/productos' => 'ProductosController@index',
         '/ventas' => 'VentasController@index',  
         '/ventas/reportes' => 'VentasController@reportes',
+        '/session-status' => 'LoginController@sessionStatus',
     ],
     'POST' => [
         '/login' => 'LoginController@authenticate',

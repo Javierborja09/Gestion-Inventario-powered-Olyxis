@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\KardexDAO;
+use App\DAOS\KardexDAO;
 use Framework\Core\Request;
 
 trait Auditable {

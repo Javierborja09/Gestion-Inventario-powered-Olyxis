@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\DAOS;
 
 use Framework\Core\Database;
-use App\Models\Entity\Usuario;
+use App\DAOS\Entity\Usuario;
 
 class UsuarioDAO
 {
@@ -11,7 +11,7 @@ class UsuarioDAO
 
     public function __construct()
     {
-        $this->db = Database::getInstance(); // Uso de Singleton
+        $this->db = Database::getInstance();
     }
 
     /**
@@ -19,7 +19,7 @@ class UsuarioDAO
      */
     public function findByUsername(string $username): ?Usuario
     {
-        $stmt = $this->db->call('sp_buscar_usuario', [$username]); // Uso del método call optimizado
+        $stmt = $this->db->call('sp_buscar_usuario', [$username]);
         $row = $stmt->fetch();
         return $row ? new Usuario($row) : null;
     }

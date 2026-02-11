@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use Framework\Core\Controller;
 use Framework\Core\Request;
-use App\Models\KardexDAO;
+use App\DAOS\KardexDAO;
 use App\Middlewares\AuthMiddleware;
 use App\Middlewares\SessionTimeoutMiddleware;
 

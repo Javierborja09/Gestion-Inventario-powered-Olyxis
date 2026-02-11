@@ -1,5 +1,5 @@
 <?php
-namespace App\Models\Entity;
+namespace App\DAOS\Entity;
 
 class Usuario {
     public ?int $id;

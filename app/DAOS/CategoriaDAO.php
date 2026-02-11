@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\DAOS;
 
 use Framework\Core\Database;
-use App\Models\Entity\Categoria;
+use App\DAOS\Entity\Categoria;
 
 class CategoriaDAO
 {

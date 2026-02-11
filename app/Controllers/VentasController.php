@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use Framework\Core\Controller;
 use Framework\Core\Request;
-use App\Models\ProductoDAO;
-use App\Models\VentaDAO;
-use App\Traits\Auditable; // Importamos el Trait de Olyxis
+use App\DAOS\ProductoDAO;
+use App\DAOS\VentaDAO;
+use App\Traits\Auditable;
 
 use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;

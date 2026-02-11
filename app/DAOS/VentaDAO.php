@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\DAOS;
 
 use Framework\Core\Database;
 
@@ -15,7 +15,6 @@ class VentaDAO
      * Obtiene el listado de ventas (Detalle) con filtro opcional
      */
     public function getAll($inicio = null, $fin = null): array {
-        // Convertimos strings vacíos a null para que el SP funcione correctamente
         $inicio = !empty($inicio) ? $inicio : null;
         $fin = !empty($fin) ? $fin : null;
 

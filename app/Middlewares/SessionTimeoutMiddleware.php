@@ -7,21 +7,26 @@ use Framework\Core\Request;
 use Framework\Core\Response;
 
 class SessionTimeoutMiddleware implements Middleware {
-    public function handle(Request $request, callable $next) {
-        $session = $request->session();
-        $now = time();
-        $timeout = 300; 
+    public const TIMEOUT = 300;
 
-        if ($session->has('user_id')) {
-            $lastActivity = $session->get('last_activity');
-            if ($lastActivity && ($now - $lastActivity > $timeout)) {
-                $session->destroy();
-                $session->setFlash('error', 'Tu sesión ha expirado por inactividad.');
-                return new Response('', 302, ['Location' => '/']);
-            }
+ public function handle(Request $request, callable $next) {
+    $session = $request->session();
+    $timeout = self::TIMEOUT;
+
+    if ($session->has('user_id')) {
+        $now = time();
+        $lastActivity = $session->get('last_activity') ?? $now;
+        $diff = $now - $lastActivity;
+
+        if ($request->get('reset')) {
             $session->set('last_activity', $now);
         }
-
-        return $next($request);
+        
+        if ($diff > $timeout && !$request->isAjax() && $request->getPath() !== '/logout') {
+            return new Response('', 302, ['Location' => '/logout?reason=timeout']);
+        }
     }
+
+    return $next($request);
+}
 }

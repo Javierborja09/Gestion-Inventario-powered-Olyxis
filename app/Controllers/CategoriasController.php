@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use Framework\Core\Controller;
 use Framework\Core\Request;
-use App\Models\CategoriaDAO;
-use App\Models\Entity\Categoria;
+use App\DAOS\CategoriaDAO;
+use App\DAOS\Entity\Categoria;
 use App\Traits\Auditable; 
 use App\Middlewares\SessionTimeoutMiddleware;
 use App\Middlewares\AuthMiddleware;

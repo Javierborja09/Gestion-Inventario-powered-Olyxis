@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\DAOS;
 
 use Framework\Core\Database;
-use App\Models\Entity\Producto;
+use App\DAOS\Entity\Producto;
 
 class ProductoDAO
 {
@@ -36,7 +36,6 @@ class ProductoDAO
     public function getById($id): ?Producto
     {
         $sql = "SELECT * FROM productos WHERE id = ?";
-        // Usamos fetch de tu clase Database que ya retorna el array asociativo
         $row = $this->db->fetch($sql, [$id]);
 
         return $row ? new Producto($row) : null;
