@@ -21,6 +21,8 @@ class CategoriasController extends Controller {
         $this->categoriaDao = new CategoriaDAO();
     }
 
+    //hola ebe
+
     public function index(Request $request) {
         return $this->view('categorias/index', [
             'title' => 'Gestión de Categorías',
